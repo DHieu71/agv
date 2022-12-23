@@ -1,0 +1,6 @@
+sử dụng google colab để train bằng GPU, tăng tốc độ train
+
+kết nối với  gg drive để không phải mất thời gian tải
+
+
+

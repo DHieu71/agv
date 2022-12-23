@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Đồ án tốt nghiệp</title>
+
+        <!-- ============= CSS ============= -->
+        <!-- <link rel="stylesheet" href="./assets/css/style.css" /> -->
+        <link rel="stylesheet" href="./css/style.css" />
+
+        <!-- ======== Iconscout CSS ======== -->
+        <link
+            rel="stylesheet"
+            href="https://unicons.iconscout.com/release/v4.0.0/css/line.css"
+        />
+    </head>
+    <body>
+        <div id="main">
+            <nav>
+                <div class="logo">
+                    <div class="logo__image">
+                        <!-- <img src="./assets/imgs/logo_nt.jpg" alt="" /> -->
+                        <img src="./imgs/logo_nt.jpg" alt="" />
+                    </div>
+                    <div class="logo__name">Nhật Tri</div>
+                </div>
+
+                <div class="menu-items">
+                    <ul class="nav-links">
+                        <li>
+                            <a href="#">
+                                <i class="uil uil-estate"></i>
+                                <span class="link-name">Home</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <i class="uil uil-car"></i>
+                                <span class="link-name">Jetbot</span>
+                            </a>
+                        </li>
+                    </ul>
+                    
+                </div>
+            </nav>
+
+            <section class="dashboard">
+                <div class="top">
+                    <i class="uil uil-bars sidebar-toggle"></i>
+
+                    <div class="title">
+                        <h1>ĐỒ ÁN TỐT NGHIỆP</h1>
+                        <h2>
+                            GIÁM SÁT VÀ VẬN HÀNH XE TỰ HÀNH TRONG QUẢN LÝ KHO
+                            BÃI
+                        </h2>
+                    </div>
+                    <!-- <img src="./assets/imgs/logo_dut.jpg" alt="" /> -->
+                    <img src="./imgs/logo_dut.jpg" alt="" />
+                </div>
+
+                <div class="dash-content">
+                    <div class="overview">
+                        <div class="title">
+                            <i class="uil uil-folder"></i>
+                            <span class="text">Nhà kho</span>
+                        </div>
+                    </div>
+
+                    <div class="boxes">
+                        <div class="box box1">
+                            <span class="text">Kho 1</span>
+                            <span class="number js-storage-1">0</span>
+                            <i class="uil uil-box"></i>
+                        </div>
+
+                        <div class="box box2">
+                            <span class="text">Kho 2</span>
+                            <span class="number js-storage-2">0</span>
+                            <i class="uil uil-box"></i>
+                        </div>
+
+                        <div class="box box3">
+                            <span class="text">Kho 3</span>
+                            <span class="number js-storage-3">0</span>
+                            <i class="uil uil-box"></i>
+                        </div>
+                    </div>
+
+                    <div class="activity">
+                        <div class="activity-data">
+                            <div class="title title-activity">
+                                <i class="uil uil-luggage-cart"></i>
+                                <span class="text">Thông tin về Jetbot</span>
+                            </div>
+
+                            <div class="jetbot-monitoring">
+                                <div class="map">
+                                    <div class="start-position">Start</div>
+                                    <div class="kho-1-position">
+                                        <span>Kho 1</span>
+                                    </div>
+                                    <div class="kho-2-position">Kho 2</div>
+                                    <div class="kho-3-position">Kho 3</div>
+                                    <div class="jetbot-position js-jetbot-position hidden">
+                                        <i class="uil uil-luggage-cart"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="jetbot-data">
+                            <div class="title title-activity">
+                                <i class="uil uil-luggage-cart"></i>
+                                <span class="text">Trạng thái</span>
+                            </div>
+                            <ul class="jetbot-status">
+                                <li>
+                                    <span class="name">Trạng thái hoạt động</span>
+                                    <span class="value-working js-working-icon"></span>
+                                    <span class="value-warning js-warning-icon">
+                                        <i class="uil uil-exclamation-triangle"></i>
+                                    </span>
+
+                                </li>
+
+                                <li>
+                                    <span class="name">Pin (%)</span>
+                                    <span class="value js-pin"></span>
+                                </li>
+
+                                <li class="jetbot-working js-jetbot-working">
+                                    <span class="name">Việc đang làm</span>
+                                    <span class="value js-working"></span>
+                                </li>
+
+                                <li class="jetbot-warning js-jetbot-warning">
+                                    <span class="name">Cảnh báo</span>
+                                    <span class="value js-warning"></span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </body>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io('/jetbot');
+        const $ = document.querySelector.bind(document);
+
+        // ======== Side bar ========
+        const sidebar = $('nav');
+        const sidebarToggle = $('.sidebar-toggle');
+        sidebarToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('close');
+        });
+
+        // ======== Jetbot ========
+        const storage1 = $('.js-storage-1');
+        const storage2 = $('.js-storage-2');
+        const storage3 = $('.js-storage-3');
+        const jetbotPosition = $('.js-jetbot-position');
+        const pin = $('.js-pin');
+        
+        const workingIcon = $('.js-working-icon');
+        const jetbotWorking = $('.js-jetbot-working')
+        const working = $('.js-working');
+
+        const warningIcon = $('.js-warning-icon')
+        const jetbotWarning = $('.js-jetbot-warning')
+        const warning = $('.js-warning')
+        
+        // Map size
+        const widthMap = 140 * 3;
+        const heightMap = 120 * 2;
+        const widthMapCam = 450;
+        const heightMapCam = 390;
+
+        // Jetbot size
+        const jetbotHeight = 55;
+        const jetbotWitdh = 36;
+
+        // status working
+        const statusWorking = {
+            goToStart: 'Đang quay về vị trí ',
+            scanProduct: 'Đang quét mã hàng',
+            waitProduct: 'Đang chờ nhận hàng',
+            releaseProduct: 'Đang thả hàng tại ',
+            transportProduct: 'Đang vận chuyển hàng tới ',
+        };
+
+        const warningKey = {
+            outOfMap: 'Jetbot hiện không có trên sân',
+            outOfRoad: 'Jetbot hiện không thuộc làn di chuyển',
+            hasProductsInRoad: 'Xuất hiện hàng trên làn di chuyển',
+            dropProduct: 'Rơi hàng khi vận chuyển',
+            disconnectCam: 'Cam không hoạt động',
+            wrongProduct: 'Hàng chất lên Jetbot không hợp lệ'
+        }
+
+        // Storage position
+        const storagePosition = {
+            start: {
+                top: '196px',
+                left: '192px',
+            },
+            storage1: {
+                top: '92px',
+                left: '-3px'
+            },
+            storage2: {
+                top: '-10px',
+                left: '120px'
+            },
+            storage3: {
+                top: '-10px',
+                left: '260px'
+            }
+        };
+
+       
+        // Socket
+        socket.on('web', (data) => {
+            
+            // storage
+            if(data.storage && data.isRelease) {
+                storage1.textContent = data.storage[0];
+                storage2.textContent = data.storage[1];
+                storage3.textContent = data.storage[2];
+            }
+
+            // ON/OFF + warning
+            if(data.isOn && !data.isWarning){
+                workingIcon.style.display = 'inline-block';
+                workingIcon.style.backgroundColor = 'green';
+                jetbotWorking.style.display = 'block';
+
+                warningIcon.style.display = 'none';
+                jetbotWarning.style.display = 'none';
+
+            }else if(!data.isOn){
+                workingIcon.style.display = 'inline-block';
+                workingIcon.style.backgroundColor = 'red';
+                jetbotWorking.style.display = 'block';
+                working.textContent = null;
+
+                warningIcon.style.display = 'none';
+                jetbotWarning.style.display = 'none';
+                warning.textContent = null;
+
+            }else if (data.isOn && data.isWarning){
+                workingIcon.style.display = 'none';
+                jetbotWorking.style.display = 'none';
+
+                warningIcon.style.display = 'inline-block';
+                jetbotWarning.style.display = 'block';
+            }
+
+            // pin
+            if(data.pin && data.isOn){
+                pin.textContent = data.pin;
+            }else if (data.pin && !data.isOn){
+                pin.textContent = null;
+            }
+
+            if(data.working && !data.isWarning){
+                working.textContent = statusWorking[data.working] + ` ${data.target ? data.target : ''}`;
+            }else if(data.working && !data.isOn){
+                working.textContent = null;
+            }
+            else if(data.warningMessage && data.isWarning){
+                warning.textContent = warningKey[data.warningMessage];
+            }
+
+            console.log(data.position, data.targetPosition);
+            if(data.position){
+                jetbotPosition.classList.remove('hidden');
+                if(data.isWarning && data.warningMessage === 'outOfRoad'){
+                    jetbotPosition.style.top = heightMap / 2 + 'px';
+                    jetbotPosition.style.left = widthMap  / 2 + 'px';
+                    jetbotPosition.style.rotate = null;
+                    jetbotPosition.style.transform = 'translate(-50%, -50%)';
+                }else {
+                    if (data.position[0] < 80) {
+                        jetbotPosition.style.top = Math.floor((data.position[1] / widthMapCam) * heightMap - jetbotHeight / 2) + 'px';
+                        jetbotPosition.style.left = '6px';
+                        jetbotPosition.style.rotate = '-90deg';
+                        jetbotPosition.style.transform = 'scale(1)';
+        
+                    } else if ( (data.position[0] >= 80 && data.position[0] < 310) && data.position[1] < 125) {
+                        jetbotPosition.style.top = '0px';
+                        jetbotPosition.style.left = Math.floor((data.position[0] / heightMapCam) * widthMap - jetbotWitdh / 2) + 'px';
+                        jetbotPosition.style.rotate = null;
+                        jetbotPosition.style.transform = 'scale(1)';
+                        
+                    } else if (data.position[0] >= 310) {
+                        jetbotPosition.style.top = Math.floor((data.position[1] / widthMapCam) * heightMap - jetbotHeight / 2) + 'px';
+                        jetbotPosition.style.left = '374px';
+                        jetbotPosition.style.rotate = '90deg';
+                        jetbotPosition.style.transform = 'scale(1)';
+        
+                    } else if ((data.position[0] >= 80 && data.position[0] < 310) && (data.position[1] >= 340)){
+                        jetbotPosition.style.top = '190px';
+                        jetbotPosition.style.left = Math.floor((data.position[0] / heightMapCam) * widthMap - jetbotWitdh / 2) + 'px';
+                        jetbotPosition.style.rotate = null;
+                        jetbotPosition.style.transform = 'scale(-1, 1)';
+                    } 
+                }
+            }else {
+                if(data.isWarning && data.warningMessage === 'outOfMap'){
+                    jetbotPosition.classList.add('hidden');
+                }else if(data.targetPosition){
+                    jetbotPosition.classList.remove('hidden');
+                    let position = storagePosition[data.targetPosition]
+                    for(let key in position){
+                        jetbotPosition.style[key] = position[key];
+                    }
+                }
+            }
+
+            if(data.position && !data.isOn){
+                jetbotPosition.style.add('hidden');
+            }
+            
+        });
+        
+        socket.on('disconnect1', data => {
+            warningIcon.style.display = 'none';
+
+            workingIcon.style.display = 'inline-block';
+            workingIcon.style.backgroundColor = 'red';
+
+            pin.textContent = null;
+
+            jetbotPosition.classList.add('hidden');
+
+            jetbotWorking.style.display = 'inline-block';
+            working.textContent = null;
+
+            jetbotWarning.style.display = 'none';
+            warning.textContent = null;
+        })
+
+    </script>
+</html>

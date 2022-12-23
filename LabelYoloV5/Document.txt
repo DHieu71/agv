@@ -1,0 +1,6 @@
+Nguồn code
+https://github.com/heartexlabs/labelImg
+
+Ghép các file đã gắn nhãn vào thư mục coco128 để train với 80 vật thể được gán nhãn cho yoloV5 cung cấp
+
+file coco128 sẽ đưa vào train YoloV5 bằng gg colab
